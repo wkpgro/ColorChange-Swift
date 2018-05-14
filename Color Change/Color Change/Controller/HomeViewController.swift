@@ -35,7 +35,11 @@ class HomeViewController: UIViewController {
 
     @objc func changeBackgroundColor(_ notification: Notification) {
         if let color_value = notification.userInfo?["color"] as? String {
-            print(color_value)
+            let color = UIColor(hexString: color_value) ?? UIColor.white
+            self.view.backgroundColor = color
+            
+            Helper.setBrightness(value: 1.0)
         }
     }
 }
+

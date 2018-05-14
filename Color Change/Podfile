@@ -4,5 +4,6 @@ target 'Color Change' do
   use_frameworks!
   
   pod 'Alamofire'
+  pod 'JGProgressHUD'
 
 end

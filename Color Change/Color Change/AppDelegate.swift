@@ -18,8 +18,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         registerForPushNotifications()
+        
+        // save Device's default brightness value
         return true
     }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        let brightness_value = Helper.loadObjectDataToNSUserDefault(forKey: Global.BRIGHTNESS_VALUE) ?? UIScreen.main.brightness as NSObject
+        Helper.setBrightness(value: brightness_value as! CGFloat)
+    }
+    
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            if (topController as! UINavigationController).viewControllers.last is HomeViewController {
+                Helper.setBrightness(value: 1.0)
+            }
+            else {
+                let brightness_value = UIScreen.main.brightness
+                Helper.saveObjectDataToNSUserDefault(saveObject: brightness_value as NSObject, forKey: Global.BRIGHTNESS_VALUE)
+            }
+        }
+        
+        
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        
+        let brightness_value = Helper.loadObjectDataToNSUserDefault(forKey: Global.BRIGHTNESS_VALUE) ?? UIScreen.main.brightness as NSObject
+        Helper.setBrightness(value: brightness_value as! CGFloat)
+    }
+    
 
     //MARK - Push notification
     func registerForPushNotifications() {
@@ -54,6 +89,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register: \(error)")
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+        print("applicationIconBadgeNumber----- \(application.applicationIconBadgeNumber)")
+    }
+    
+    func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable : Any], completionHandler: @escaping () -> Void) {
+        print("kadjfaldkfjdfasdfjaldksfja")
+    }
+    
+    
+    func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable : Any], withResponseInfo responseInfo: [AnyHashable : Any], completionHandler: @escaping () -> Void) {
+        print("127987419284712034138")
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
